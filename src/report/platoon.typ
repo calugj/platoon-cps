@@ -39,7 +39,7 @@
 
 = Objective
 
-Cooperative ACC is the direct follow-up of the Adaptive Cruise Control, a device that allows to keep a desired headway to the preceding vehicle.
+CACC #footnote[Cooperative Adaptive Cruise Control.] is the direct follow-up of the Adaptive Cruise Control, a device that allows to keep a desired headway to the preceding vehicle.
 This technology can be used to setup platooning, a sequence of vehicles where one follow each other adaptively at safe distance.
 This will in turn reduce traffic, as the platoon is managed by fast-responsive controllers, and possibly reduce the pollution by increasing the aerodynamic efficiency.
 However, as we delegate human responsibility to machines, attacks can be attempted to harm the stability of the system, by degrading the performance or causing severe accidents.
@@ -78,7 +78,7 @@ The vehicles are numbered in ascending order, starting from the leader as vehicl
 The state of each vehicle is represented by a vector
 $ x_i (t) = vec(d_i (t), v_i (t), a_i (t)) $
 where $d_i (t)$ is the distance between vehicle $i$ and $i-1$, and $v_i (t)$ and $a_i (t)$ are respectively the velocity and the acceleration of vehicle $i$.
-The component $d_0 (t)$ is obviously not defined for the system.
+The component $d_0 (t)$ is obviously not defined for the system #footnote[We assume the leader vehicle to always have error 0.].
 
 We assume that all vehicles can only move along one axis, i.e. only forward and backwards.
 It's also assumed that the protocol allows for the vehicles to share informations about their velocity and acceleration to the following ones.
@@ -117,15 +117,6 @@ $ b = vec(1, 0, k_d/h), #h(1cm) c = vec(0, 0, 1/h), $
 
 $h$ is the desired headway distance between vehicles in $"ms"$, and parameters $k_p$ and $k_d$ are used to tune the response of the following vehicles. 
 
-
-Each simulation must be initialized with these parameters:
-- ``` MAX_TIME```: the maximum time of the simulation in milliseconds;
-- ``` T```: the resolution of the time unit in seconds;
-- ``` k```: the number of vehicles that compose the platoon;
-- ``` h```: the target heading between vehicles in milliseconds.
-
-@snp:basic_simulator shows the implementation of the basic simulator.
-
 #place(
   bottom + center,
   scope: "parent",
@@ -152,6 +143,15 @@ Each simulation must be initialized with these parameters:
     )<snp:basic_simulator>
   ]
 )
+
+Each simulation must be initialized with these parameters:
+- ``` MAX_TIME```: the maximum time of the simulation in milliseconds;
+- ``` T```: the resolution of the time unit in seconds;
+- ``` k```: the number of vehicles that compose the platoon;
+- ``` h```: the target heading between vehicles in milliseconds.
+
+@snp:basic_simulator shows the implementation of the basic simulator.
+
 
 == Replay Attack
 
@@ -259,7 +259,7 @@ This implementation is very lightweight and doesn't require each car to recursiv
 The authors of the paper correctly state that the the results hold within the assumption that the leader is immune to attacks.
 This is in general not true and a series of attacks that affect the leader can pose severe isues to this protocol.
 
-Some attacks will be discussed and tested on the result section.
+Some attacks will be discussed and tested on the results section.
 
 = Results and Discussion
 
@@ -327,14 +327,14 @@ It's possible to note that, on the first phase, all four cars behave, and accele
 From $"time" > 20000 "ms"$, and for a duration of $5000 "ms"$, the attacker records its real world values.
 Then, it replays those values ciclically from $"time" > 40000 "ms"$.
 At $"time" = 60000 "ms"$, the leader starts to decelerate, and the following vehicles, including the attacker, follow accordingly.
-The vehicle behind the attacker, though, received spoofed values and quickly crashes onto it. 
+The vehicle number 3, though, received spoofed values and quickly crashes onto it. 
 
 == Countermeasure -- dual model detection
 
 In @fig:cross_correlation_paper we can see the outcome of the simulation.
 The simulation is a long run of $1000 s$, where 2 distinct replay attacks take place.
 The first one starts at $300 s$ and ends at $450 s$, and the second one starts at $700 s$ and ends at $800 s$
-During the time the attack is not happening, the cross correlation is well over $0$.
+During the time the attack is not happening, the cross correlation is well greater than $0$.
 Moreover, the previous assumption is correct, as it's possible to find a stronger correlation with larger windows.
 During each of the two attacks, the cross correlation quickly drops to 0 in all three cases.
 
@@ -392,7 +392,7 @@ We also showed before that the longer the windows size, the longer the detection
 )<fig:cross_correlation_long>
 
 In conclusion, although the solution proposed by the authors is more computationally demanding for long platoons, it's the only option that grants security.
-But also for short platoons it is not useful, as we don't have a high computational overhead.
+Also for short platoons it becomes not useful, as we don't have a high computational overhead.
 Running the full virtual model is thus the only choice.
 
 == The leader as adversary
@@ -405,7 +405,7 @@ This attack assumes that the leader has access to the random number generator, w
 $ Delta u_r = c $
 
 With this attack, a constant is added to the input acceleration.
-In this case, there isn't any randomness, so any replay attack wouldn't be noticed.
+Under this assumption, there isn't any randomness, so any replay attack wouldn't be noticed by the previous algorithm.
   
 However, this attack is too trivial and we also have an assumption issue: we cannot always assume that the leader has access to the control logic, as there might be precautions into that.
 Another attack must be designed.
