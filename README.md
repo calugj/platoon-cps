@@ -17,3 +17,7 @@ The lineup is the following:
 - Analysis on the feasibility of the optimization strategy,
 - Attacks from the leader.
 
+
+
+
+typst watch ./src/report/platoon.typ ./Report.pdf

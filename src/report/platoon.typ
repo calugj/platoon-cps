@@ -40,11 +40,11 @@
 = Objective
 
 CACC #footnote[Cooperative Adaptive Cruise Control.] is the direct follow-up of the Adaptive Cruise Control, a device that allows to keep a desired headway to the preceding vehicle.
-This technology can be used to setup platooning, a sequence of vehicles where one follow each other adaptively at safe distance.
+This technology can be used to set up platooning, a sequence of vehicles where one follow each other adaptively at safe distance.
 This will in turn reduce traffic, as the platoon is managed by fast-responsive controllers, and possibly reduce the pollution by increasing the aerodynamic efficiency.
 However, as we delegate human responsibility to machines, attacks can be attempted to harm the stability of the system, by degrading the performance or causing severe accidents.
 In this work, we will refer to the paper @doc:paper to demonstrate the usage of a basic platooning simulator to determine how replay attacks are implemented, and a possible solution that can detect them.
-Moreover, an extension on the authors' work was conducted to explore the possibility for a lightweight implementation of the detection algorithm and possible attacks to the countermeasure.
+Moreover, an extension on the authors' work was conducted to explore the opportunity for a lightweight implementation of the detection algorithm and possible attacks to the countermeasure.
 
 The lineup is the following:
 - Build a basic platooning simulator,
@@ -59,11 +59,11 @@ This project requires to build a basic simulator from scratch.
 The preferred choice was to use Python as programming language, as it's very convenient.
 Moreover, Python offers a wide range of libraries that are very practical.
 In particular NumPy library was used to perform matrices operations, and Matplotlib library to draw plots.
-Colab was chosed as Google's cloud implementation of Jupyter Notebooks as is very convenient to performs iterated tests.
+Colab was chosen as Google's cloud implementation of Jupyter Notebooks as is very convenient to performs iterated tests.
 
 = Experiments
 
-The core challenge of this project is to demonstrate a Cooperative Adaprive Cruise Control (CACC) simulator in action.
+The core challenge of this project is to demonstrate a Cooperative Adaptive Cruise Control (CACC) simulator in action.
 CACC allows the involved vehicles to follow the preceding vehicle by keeping a desired relative distance by exploiting the wireless communication and the onboard sensors, i.e. radar.
 In a CACC platoon, every vehicle has access to the preceding vehicle's speed and acceleration, and manages to measure the inter vehicle distance through onboard independent sensors.
 The attached Jupyter Notebook contains all the details of the Python code. 
@@ -81,7 +81,7 @@ where $d_i (t)$ is the distance between vehicle $i$ and $i-1$, and $v_i (t)$ and
 The component $d_0 (t)$ is obviously not defined for the system #footnote[We assume the leader vehicle to always have error 0.].
 
 We assume that all vehicles can only move along one axis, i.e. only forward and backwards.
-It's also assumed that the protocol allows for the vehicles to share informations about their velocity and acceleration to the following ones.
+It's also assumed that the protocol allows for the vehicles to share information about their velocity and acceleration to the following ones.
 Such communication happens instantaneously, and at the maximum frequency possible, i.e. it updates every time the system updates.
 
 The leader is the only vehicle that is controllable by a predefined acceleration profile $u_r$.
@@ -165,7 +165,7 @@ An experiment included on this report will indeed show this vulnerability in act
 When the platoon is in a steady state, we can note that all velocities are constant, and all accelerations are $0" "m\/s^2$.
 This scenario is typical in highways.
 In this phase, the attacker will record real time velocities and accelerations from its vehicle and store them in a buffer.
-When the malicious vehicle initiates the attack, it starts to replay the recorded values to the the following vehicles.
+When the malicious vehicle initiates the attack, it starts to replay the recorded values to the following vehicles.
 This in general has the first effect of degrading the performance of the platoon, as small variations on the speed are not compensated by the headway error calculation.
 However, it becomes very dangerous in a situation when the leader decides to decelerate: the vehicle behind the attacker will unavoidably crash onto it, because it was receiving spoofed steady-state values.
 Chain crashes are highly probable as well.
@@ -213,7 +213,7 @@ The base code is very similar to the normal simulator, it only differs for the l
 
 A possible countermeasure proposed by the authors requires very simple modifications.
 
-The leader needs to be equipped with a pseudo-random number generator, that samples from a gaussian distribution with mean $0$ and variance in the order of $10^(-5)$.
+The leader needs to be equipped with a pseudo-random number generator, that samples from a Gaussian distribution with mean $0$ and variance in the order of $10^(-5)$.
 This assumes again that the leader is always legitimate and generates random numbers according the distribution.
 
 These random generated noises will be added to the input acceleration given by the profile:
@@ -230,7 +230,7 @@ Every vehicle's control unit has a virtual model running.
 The virtual model's purpose is to estimate the true expected values for the acceleration of the preceding car in absence of attacks, based on the shared random noise.
 It's possible to cross correlate the acceleration of the virtual model, and the acceleration that vehicle $i$ calculates on the real model.
 If the cross correlation is approximately $0$, with high probability the acceleration that vehicle $i$ calculated are not timely according to the leader.
-Thus with high probability an attack is occuring.
+Thus, with high probability an attack is occurring.
 Upon discovery, the vehicle might interrupt the normal navigation and perform safe operations, like increase the headway distance or slowly come to a stop. 
 
 To test this countermeasure, the random number generator needs to be added on the leader vehicle:
@@ -256,8 +256,8 @@ This implementation is very lightweight and doesn't require each car to recursiv
 
 == Countermeasure of the countermeasure -- leader is adversary
 
-The authors of the paper correctly state that the the results hold within the assumption that the leader is immune to attacks.
-This is in general not true and a series of attacks that affect the leader can pose severe isues to this protocol.
+The authors of the paper correctly state that the results hold within the assumption that the leader is immune to attacks.
+This is in general not true and a series of attacks that affect the leader can pose severe issues to this protocol.
 
 Some attacks will be discussed and tested on the results section.
 
@@ -289,7 +289,7 @@ $ u_r = cases(
 )<fig:basic_simulation>
 
 From the plot in @fig:basic_simulation, we can see that the vehicles behave as expected, keeping the desired headway in all phases of the simulation.
-The distance in meters between the vehicles depends on the speed, and is well uniformed accross all of them.
+The distance in meters between the vehicles depends on the speed, and is well uniformed across all of them.
 At the end of the simulation, we can see that the leader stops and all other vehicles follow.
 This offers the baseline to perform all the future experiments.
 
@@ -325,7 +325,7 @@ $ u_r = cases(
 
 It's possible to note that, on the first phase, all four cars behave, and accelerate according to the specifications.
 From $"time" > 20000 "ms"$, and for a duration of $5000 "ms"$, the attacker records its real world values.
-Then, it replays those values ciclically from $"time" > 40000 "ms"$.
+Then, it replays those values cyclically from $"time" > 40000 "ms"$.
 At $"time" = 60000 "ms"$, the leader starts to decelerate, and the following vehicles, including the attacker, follow accordingly.
 The vehicle number 3, though, received spoofed values and quickly crashes onto it. 
 
@@ -343,7 +343,7 @@ During each of the two attacks, the cross correlation quickly drops to 0 in all 
   image("./images/cross_correlation_paper.png", width: 110%), caption: [Cross correlation calculated using the virtual model.]
 )<fig:cross_correlation_paper>
 
-The areas highlighted in grey are marked as acceleration regions.
+The areas highlighted in gray are marked as acceleration regions.
 We can see that inside this area, the values for cross correlation are way off the expected.
 Coincidently, those moments happen concurrently to large accelerations from the vehicle. 
 
@@ -363,17 +363,17 @@ Future work could aim at increasing the noise variance, so that more perturbatio
   image("./images/cross_correlation_closeup.png", width: 80%), caption: [Closeup of the start of an attack.]
 )<fig:cross_correlation_closeup>
 
-In @fig:cross_correlation_closeup we see a close up on the time where the fist attack takes place.
+In @fig:cross_correlation_closeup we see a close up on the time when the fist attack takes place.
 Specifically, we can see in more detail the time each correlation takes to respond, under all the three window sizes. 
 The 5-seconds correlation, despite being weaker, reacts very quickly.
 The 15-seconds correlation is certainly stronger, but requires extra seconds to fully nullify at $0$.
-A tradeoff between acccuracy and timeliness is offered by the $10 s$ correlation.
+A tradeoff between accuracy and timeliness is offered by the $10 s$ correlation.
 
 
 == Countermeasure -- detect the attack using only the noise
 
 In @fig:cross_correlation_simplified we can see the outcome of the simulation.
-The simulation parameters are analoguous as the previous experiment, the only difference is how the vehicle $i$ computes the cross correlation. 
+The simulation parameters are analogous as the previous experiment, the only difference is how the vehicle $i$ computes the cross correlation. 
 
 #figure(
   image("./images/cross_correlation_simplified.png", width: 110%), caption: [Cross correlation between the random generated values and the acceleration computed by the vehicle after the attacker.]
@@ -382,13 +382,13 @@ The simulation parameters are analoguous as the previous experiment, the only di
 We can clearly see that the results are promising: cross correlating directly the random noise with the values received by the preceding vehicle can detect the attack.
 This reduces the computations needed to perform the detection in large-sized platoons.
 
-However, this approach will work only if the platoon has a number of vehicles such that each perturbation from the leader affects the vehicle $i$ whithin the correlation window.
+However, this approach will work only if the platoon has a number of vehicles such that each perturbation from the leader affects the vehicle $i$ within the correlation window.
 
 This is not guaranteed, as we can possibly have more that 50 vehicles on a platoon that would require a windows size of more than 1 minute.
 We also showed before that the longer the windows size, the longer the detection time.
 
 #figure(
-  image("./images/cross_correlation_long.png", width: 110%), caption: [Simplified cross correlation for a platoon of 20 cars: there are too many vehicles compared to the correlation windows, and the correlation is always 0]
+  image("./images/cross_correlation_long.png", width: 110%), caption: [Simplified cross correlation for a platoon of 20 cars: there are too many vehicles compared to the correlation windows, and the correlation is always 0.]
 )<fig:cross_correlation_long>
 
 In conclusion, although the solution proposed by the authors is more computationally demanding for long platoons, it's the only option that grants security.
@@ -407,12 +407,12 @@ $ Delta u_r = c $
 With this attack, a constant is added to the input acceleration.
 Under this assumption, there isn't any randomness, so any replay attack wouldn't be noticed by the previous algorithm.
   
-However, this attack is too trivial and we also have an assumption issue: we cannot always assume that the leader has access to the control logic, as there might be precautions into that.
+However, this attack is too trivial, and we also have an assumption issue: we cannot always assume that the leader has access to the control logic, as there might be precautions into that.
 Another attack must be designed.
 
 === Input manipulation
 
-One parameter where the leader has full control is the acceleration profile, and this is acccording to all the assumptions we made before.
+One parameter where the leader has full control is the acceleration profile, and this is according to all the assumptions we made before.
 We can design an acceleration profile as follows.
 
 Once steady state condition is reached:
@@ -420,7 +420,7 @@ $ u_r = cases(
   0.5 " if time is even",
   -0.5 " if time is odd"
 ) $
-meaning that every millisecond, the control will apply an acceleration whose module is dependant on the parity.
+meaning that every millisecond, the control will apply an acceleration whose module is dependent on the parity.
 These accelerations are not felt by the users of the platoon, as they only last for one millisecond.
 
 #figure(
@@ -428,7 +428,7 @@ These accelerations are not felt by the users of the platoon, as they only last 
 )<fig:leader_attack>
 
 In @fig:leader_attack we can see a simulation of such attack. 
-The simplified algorithm was used, as the platoon is short and its performance was showed.
+The simplified algorithm was used, as the platoon is short, and its performance was shown.
 The plot shows a very noisy cross correlation: it's very difficult to establish a threshold that determines the attack.
 What could be beneficial is to compute the average across a few seconds, and in turn should filter out most of the noise.
 However, computing the average adds a delay on the detection, and the results might still not be usable to detect an attack.
@@ -438,7 +438,7 @@ This attack is very powerful because it only leverages the input acceleration, w
 
 = Conclusions
 
-In this work we showed that CACC is an interesting technology that allows to setup platoons.
+In this work we showed that CACC is an interesting technology that allows to set up platoons.
 They can drastically improve the responsiveness of traffic and thus can be fundamental in big crowded cities.
 However, there are some attacks like the replay attack that can threaten the safety of users.
 A very interesting algorithm developed by the authors of the paper can detect such attack, but future work is needed to find a solution of the leader's immunity assumption.
